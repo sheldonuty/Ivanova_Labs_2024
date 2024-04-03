@@ -1,0 +1,207 @@
+# Math:
+# 1. Найти корни квадратного уравнения ax^2 + bx + c (math.sqrt)
+
+import math
+
+def find_roots(a, b, c):
+    D = b**2 - 4*a*c
+    if D > 0:
+        x1 = (-b + math.sqrt(D)) / (2*a)
+        x2 = (-b - math.sqrt(D)) / (2*a)
+        return x1, x2
+    elif D == 0:
+        x = -b / (2*a)
+        return x
+    else:
+        return "Ошибка в уравнении!"
+
+a = float(input("Введите коэффициент a: "))
+b = float(input("Введите коэффициент b: "))
+c = float(input("Введите коэффициент c: "))
+
+roots = find_roots(a, b, c)
+print("Корни:", roots)
+
+# 2. Найти площадь круга (from math import pi)
+
+from math import pi
+
+def find_circle_area(radius):
+    return pi * (radius**2)
+
+radius = float(input("Введите радиус круга: "))
+area = find_circle_area(radius)
+print("Площадь круга:", area)
+
+# Counter:
+# 1. Вывести элементы массива, которые встречаются только один раз (или два/три/четыре раза), причём в том порядке, в котором они идут в массиве.
+
+from collections import Counter
+
+array = [1, 2, 2, 3, 4, 5, 4, 6, 7, 8, 9, 1, 5, 1, 6, 7, 9, 3, 4, 2, 2, 5]
+count1 = []
+count2 = []
+count3 = []
+count4 = []
+
+for key, value in Counter(array).items():
+    if value == 1:
+        count1.append(key)
+
+for key, value in Counter(array).items():
+    if value == 2:
+        count2.append(key)
+
+for key, value in Counter(array).items():
+    if value == 3:
+        count3.append(key)
+
+for key, value in Counter(array).items():
+    if value == 4:
+        count4.append(key)
+
+print(count1)
+print(count2)
+print(count3)
+print(count4)
+
+
+# 2. Дан массив a из n целых чисел. Напишите программу, которая найдет наибольшее число, которое чаще других встречается в массиве
+# (т.е. если три числа встречаются одинаковое количество раз, нужно найти наибольшее из них).
+
+from collections import Counter
+n = int(input())    # количество чисел в массиве
+a = [int(i) for i in input().split()]
+counter = Counter(a)
+result = a[0]
+max_count = counter[result]
+for number, count in counter.items():
+    if count > max_count or (count == max_count and number > result):
+        result = number
+        max_count = count
+print(result)
+
+
+# Itertools:
+# 1. Нужно составить таблицу кодовых слов для передачи сообщений, каждому сообщению соответствует своё кодовое слово.
+# В качестве кодовых слов используются пятибуквенные слова, в которых есть только буквы А, Т, О, М, причём буква «М» появляется ровно 1 раз.
+# Каждая из других допустимых букв может встречаться в кодовом слове любое количество раз или не встречаться совсем.
+# Сколько различных кодовых слов можно использовать?
+
+import itertools
+k = 0
+a = list(itertools.product("атом", repeat = 6))
+for x in a:
+    if x.count("м") == 1:
+        k += 1
+print(k)
+
+# 2. Ученик составляет шестибуквенные слова путём перестановки букв “НЕБО” (или любого другого слова/набора букв). Сколько различных слов можно составить?
+
+import itertools
+k = 0
+a = list(itertools.permutations("НЕБО"))
+print(len(set(a)))
+
+
+# Cycle:
+# 1. Создайте функцию infinite(lst, tries), которая будет проходиться по элементам списка lst(целые числа) заданное количество раз(tries) циклически.
+# Один раз - один элемент списка. После вывода последнего значения последовательности процедура начнется с самого начала.
+# Например, если в списке 2 элемента, а функция получила значение 3, то сначала выведется первый объект, потом последний, а потом опять первый.
+# Результат работы функции представьте в виде строки, состоящей из tries количества символов.
+
+from itertools import cycle
+
+def infinite(lst, iterations):
+    result = ''
+    iter_lst = cycle(lst)
+    if lst:
+        for symbol in range(iterations):
+            result += str(next(iter_lst))
+    return result
+
+
+print(infinite([2, 5, 8], 7))
+print(infinite([], 1000))
+print(infinite([7], 4))
+
+
+# Обработка данных JSON:
+# С помощью json модуля напишите скрипт, который считывает файл JSON, содержащий информацию о книгах (название, авторов, ISBN,
+# количество страниц, статус публикации, тематику и т.д.), и выводит список всех книг, в которых количество страниц больше 500.
+# (Файл books.json)
+
+import json
+
+with open('books.json') as file:
+    data = json.load(file)
+
+books_500_pages = []
+
+for book in data:
+    if book.get('pageCount', 0) > 500:
+        books_500_pages.append(book)
+
+for book in books_500_pages:
+    print(book['title'])
+
+
+# Манипулирование данными CSV:
+# Используя модуль  csv, напишите скрипт, который читает CSV-файл, выполняет вычисления с данными и выводит результаты в новый CSV-файл.
+
+# 1. Файл freshman_kgs.csv - создать столбец Weight diff, который будет отражать изменение веса с сентября по апрель.
+# Вывести только те строки, в которых представлены респонденты мужского пола, чья разница в весе неотрицательна, а ИМТ в апреле больше двадцати.
+
+import csv
+
+with open('freshman_kgs.csv', mode='r') as file, open('results.csv', mode='w', newline='') as output_file:
+    csv_reader = csv.reader(file, delimiter=',')
+    headers = next(csv_reader)
+
+    csv_writer = csv.writer(output_file)
+    csv_writer.writerow(headers + ['Weight diff'])
+
+    for row in csv_reader:
+        if row[0] == 'M':
+            weight_diff = int(row[2]) - int(row[1])
+            bmi_apr = float(row[4])
+
+            if weight_diff >= 0 and bmi_apr > 20:
+                csv_writer.writerow(row + [weight_diff])
+
+print("Результат записан.")
+
+
+# 2. Файл homes.csv, где представлена статистика по продаже домов. Столбцы: цена продажи и запрашиваемая цена (в тыс.долларов), жилая площадь, количество комнат,
+# ванных комнат, возраст дома, количество акров на участке, налог (в долларах). Нужно рассчитать среднюю итоговую стоимость дома с восемью комнатами,
+# а также создать новый столбец, в котором были бы только дома со стоимостью более 180 и налогом менее 3500.
+
+import csv
+rows = []
+with open('homes.csv', mode = 'r', newline = '') as file:
+    csv_reader = csv.reader(file)
+    for row in csv_reader:
+        rows.append(row)
+
+total_cost = 0
+count = 0
+for row in rows[1:]:
+    if len(row) > 3 and int(row[3]) == 8:
+        total_cost += (int(row[0])*1000 + int(row[8]))
+        count += 1
+
+avg_cost = total_cost / count
+
+
+filtered_rows = [rows[0]]
+for row in rows [1:]:
+    if len(row) > 8 and int(row[0]) > 180 and int(row[8]) < 3500:
+        filtered_rows.append(row)
+
+with open('homes_result.csv', mode = 'w', newline = '') as new_file:
+    writer = csv.writer(new_file)
+    for row in filtered_rows:
+        writer.writerow(row)
+
+print(f'Средняя итоговая стоимость дома с восемью комнатами – {avg_cost} долларов.')
+print('Результаты сохранены в файле homes_result.csv')
